@@ -12,7 +12,11 @@ namespace StudentRegistrationInCore.Controllers
 {
     public class StudentModelsController : Controller
     {
-        StudentDbContext db = new StudentDbContext();
+        private readonly StudentDbContext db;
+        public StudentModelsController(StudentDbContext context)
+        {
+            db = context;
+        }
 
         public IActionResult Index()
         {
