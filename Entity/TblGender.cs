@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
-namespace StudentRegistrationInCore.Models.DB;
+namespace StudentRegistrationInCore.Entity;
 
 public partial class TblGender
 {
-    [Key]
     public int GenderId { get; set; }
 
     public string GenderName { get; set; } = null!;

@@ -1,0 +1,71 @@
+﻿@model StudentRegistrationInCore.Models.StudentViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>StudentModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" asp-controller="Student" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ClassId" class="control-label"></label>
+                <select asp-for="ClassId" class="form-control" asp-items="@(new SelectList(Model.ClassList, "Id", "Value"))"></select>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GenderId" class="control-label"></label>
+                <select asp-for="GenderId" class="form-control" asp-items="@(new SelectList(Model.GenderList, "Id", "Value"))"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="control-label"></label>
+                <input asp-for="Phone" class="form-control" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <label class="col-form-label">Select File</label>
+                <input asp-for="singleFileModel.File" class="form-control">
+                <span asp-validation-for="singleFileModel.File"></span>
+            </div>
+                
+            <div>
+                @for (var index = 0; index < @Model.hobbyModel.Count(); index++)
+                {
+                    <input type="checkbox" asp-for="@Model.hobbyModel[index].IsActive" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model.hobbyModel[index].IsActive">
+                        @Model.hobbyModel[index].HobbyName
+                    </label>
+                    <input type="hidden" asp-for="@Model.hobbyModel[index].HobbyId" />
+                    <input type="hidden" asp-for="@Model.hobbyModel[index].HobbyName" />
+                    <br />
+                }
+            </div>
+            <div class="col-12">
+                <label class="col-form-label">Select photo</label>
+                <input asp-for="photoUpload.Photo" class="form-control">
+                <span asp-validation-for="photoUpload.Photo"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

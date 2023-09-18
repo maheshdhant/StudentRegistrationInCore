@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using StudentRegistrationInCore.Models.DB;
+using StudentRegistrationInCore.Entity;
 
 var builder = WebApplication.CreateBuilder(args);
 
