@@ -14,12 +14,12 @@ namespace StudentRegistrationInCore.Models
         public int? GenderId { get; set; }
         public int? ImageId { get; set; }
         public string? Hobbies { get; set; }
-        public List<Dropdown> ClassList { get; set; }
-        public List<Dropdown> GenderList { get; set; }
-        public List<HobbyModel> hobbyModel { get; set; }
+        public List<Dropdown>? ClassList { get; set; }
+        public List<Dropdown>? GenderList { get; set; }
+        public List<HobbyModel>? hobbyModel { get; set; }
 
-        public SingleFileModel singleFileModel { get; set; }
-        public PhotoUpload photoUpload{ get; set; }
+        public SingleFileModel? singleFileModel { get; set; }
+        public PhotoUpload? photoUpload{ get; set; }
          
         internal string? HobbyNotSelectedError()
         {
@@ -30,14 +30,14 @@ namespace StudentRegistrationInCore.Models
     public  class HobbyModel
     { 
         public int HobbyId { get; set; }
-        public string HobbyName { get; set; }
+        public string? HobbyName { get; set; }
         public bool IsActive { get; set; }
     }
 
     public class Dropdown
     {
         public int Id { get; set; }
-        public string Value { get; set; }
+        public string? Value { get; set; }
     }
 
     public class ClassModel
@@ -62,12 +62,12 @@ namespace StudentRegistrationInCore.Models
     {
 
         [Required(ErrorMessage = "Please select file")]
-        public IFormFile File { get; set; }
+        public IFormFile? File { get; set; }
     }
 
     public class PhotoUpload
     {
         [Required(ErrorMessage = "Please select file")]
-        public IFormFile Photo { get; set; }
+        public IFormFile? Photo { get; set; }
     }
 }

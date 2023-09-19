@@ -55,8 +55,6 @@ namespace StudentRegistrationInCore.Controllers
                 Value = x.GenderName,
             }).ToList();
 
-
-            var aaaaa = db.TblHobbies.ToList();
             model.hobbyModel = (from hob in db.TblHobbies
                                 select new HobbyModel
                                 {
@@ -74,6 +72,25 @@ namespace StudentRegistrationInCore.Controllers
         {
             if (!ModelState.IsValid)
             {
+                imodel.ClassList = db.TblClasses.Select(x => new Dropdown
+                {
+                    Id = x.ClassId,
+                    Value = x.Grade.ToString(),
+                }).ToList();
+
+                imodel.GenderList = db.TblGenders.Select(x => new Dropdown
+                {
+                    Id = x.GenderId,
+                    Value = x.GenderName,
+                }).ToList();
+
+                imodel.hobbyModel = (from hob in db.TblHobbies
+                                    select new HobbyModel
+                                    {
+                                        HobbyId = hob.HobbyId,
+                                        HobbyName = hob.HobbyName,
+                                        IsActive = hob.IsActive,
+                                    }).ToList();
                 return View(imodel);
             }
 
@@ -111,6 +128,7 @@ namespace StudentRegistrationInCore.Controllers
             doc.Title = imodel.singleFileModel.File.FileName;
             doc.DocPath = fileNameWithPath;
             db.TblDocuments.Add(doc);
+            db.SaveChanges();
             imodel.DocId = doc.DocId;
 
             //Upload photo
@@ -128,6 +146,7 @@ namespace StudentRegistrationInCore.Controllers
             im.Title = imodel.photoUpload.Photo.FileName;
             im.ImagePath = photoNameWithPath;
             db.TblImages.Add(im);
+            db.SaveChanges();
 
             TblStudent ts = new TblStudent();
             ts.Address = imodel.Address;
@@ -143,36 +162,20 @@ namespace StudentRegistrationInCore.Controllers
             db.TblStudents.Add(ts);
             db.SaveChanges();
 
-            TblMapping tm = new TblMapping();
             var hobbyIdList = imodel.hobbyModel.Where(x => x.IsActive == true).Select(x => x.HobbyId).ToList();
             for (int i = 0; i < hobbyIdList.Count(); i++)
             {
+                TblMapping tm = new TblMapping();
+
+                int value = tm.MapId;
                 tm.StudentId = ts.Id;
                 tm.HobbyId = hobbyIdList[i];
                 db.TblMappings.Add(tm);
                 db.SaveChanges();
+                value = tm.MapId;
             }
-
-            imodel.ClassList = db.TblClasses.Select(x => new Dropdown
-            {
-                Id = x.ClassId,
-                Value = x.Grade.ToString(),
-            }).ToList();
-
-            imodel.GenderList = db.TblGenders.Select(x => new Dropdown
-            {
-                Id = x.GenderId,
-                Value = x.GenderName,
-            }).ToList();
-
-            imodel.hobbyModel = (from h in db.TblHobbies
-                                 select new HobbyModel
-                                 {
-                                     HobbyId = h.HobbyId,
-                                     HobbyName = h.HobbyName,
-                                     IsActive = h.IsActive,
-                                 }).ToList();
-            return View(imodel);
+           
+            return View("Index");
         }
     }
 }

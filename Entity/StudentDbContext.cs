@@ -70,10 +70,10 @@ public partial class StudentDbContext : DbContext
             entity.ToTable("tblDocuments");
 
             entity.Property(e => e.DocPath)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Title)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false);
         });
 
@@ -106,10 +106,10 @@ public partial class StudentDbContext : DbContext
             entity.ToTable("tblImages");
 
             entity.Property(e => e.ImagePath)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.Title)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .IsUnicode(false);
         });
 
