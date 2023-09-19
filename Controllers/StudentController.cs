@@ -11,9 +11,30 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using StudentRegistrationInCore.Models;
 using StudentRegistrationInCore.Entity;
 using System.Xml;
+using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
+using Microsoft.CodeAnalysis.CSharp;
+using Humanizer;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using EFCore.BulkExtensions;
 
 namespace StudentRegistrationInCore.Controllers
 {
+    public class MyModelRepository
+    {
+        private readonly StudentDbContext _context;
+
+        public MyModelRepository(StudentDbContext context)
+        {
+            _context = context;
+        }
+
+        public void BulkInsert(List<TblStudent> items)
+        {
+            _context.TblStudents.AddRange(items);
+            _context.SaveChanges();
+        }
+    }
     public class StudentController : Controller
     {
         private  StudentDbContext db;
@@ -138,7 +159,7 @@ namespace StudentRegistrationInCore.Controllers
             if (!Directory.Exists(photopath))
                 Directory.CreateDirectory(photopath);
 
-            string photoNameWithPath = Path.Combine(photopath, imodel.photoUpload.Photo.FileName);
+            string photoNameWithPath = Path.Combine(path, imodel.photoUpload.Photo.FileName);
             using (var stream = new FileStream(photoNameWithPath, FileMode.Create))
             {
                 imodel.photoUpload.Photo.CopyTo(stream);
@@ -158,21 +179,34 @@ namespace StudentRegistrationInCore.Controllers
             ts.ClassId = imodel.ClassId;
             ts.RegisteredDate = imodel.RegisteredDate;
             ts.Hobbies = imodel.Hobbies;
-
+            
             db.TblStudents.Add(ts);
             db.SaveChanges();
+
+
             
             var hobbyIdList = imodel.hobbyModel.Where(x => x.IsActive == true).Select(x => x.HobbyId).ToList();
-            foreach (var id in hobbyIdList)
+            var hobbyIdList1 = imodel.hobbyModel.Where(x => x.IsActive == true).ToList();
+
+            List<TblMapping> listOfHobbyId = new List<TblMapping>();
+            foreach(var id in hobbyIdList)
             {
-                TblMapping tm = new TblMapping();
-                tm.StudentId = ts.Id;
-                tm.HobbyId = id;
-                db.TblMappings.Add(tm);
-                db.SaveChanges();
+                TblMapping tblMapping= new TblMapping();
+
+                tblMapping.StudentId = ts.Id;
+                tblMapping.HobbyId = id;
+
+                listOfHobbyId.Add(tblMapping);
             }
-           
+            db.BulkInsert(listOfHobbyId);
+
             return RedirectToAction("Index");
+        }
+
+        public void BulkInsert(List<TblStudent> items)
+        {
+            db.TblStudents.AddRange(items);
+            db.SaveChanges();
         }
     }
 }
