@@ -133,12 +133,12 @@ namespace StudentRegistrationInCore.Controllers
 
             //Upload photo
             TblImage im = new TblImage();
-            string photopath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Files");
+            string photopath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Photos");
 
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            if (!Directory.Exists(photopath))
+                Directory.CreateDirectory(photopath);
 
-            string photoNameWithPath = Path.Combine(path, imodel.photoUpload.Photo.FileName);
+            string photoNameWithPath = Path.Combine(photopath, imodel.photoUpload.Photo.FileName);
             using (var stream = new FileStream(photoNameWithPath, FileMode.Create))
             {
                 imodel.photoUpload.Photo.CopyTo(stream);
@@ -161,21 +161,18 @@ namespace StudentRegistrationInCore.Controllers
 
             db.TblStudents.Add(ts);
             db.SaveChanges();
-
+            
             var hobbyIdList = imodel.hobbyModel.Where(x => x.IsActive == true).Select(x => x.HobbyId).ToList();
-            for (int i = 0; i < hobbyIdList.Count(); i++)
+            foreach (var id in hobbyIdList)
             {
                 TblMapping tm = new TblMapping();
-
-                int value = tm.MapId;
                 tm.StudentId = ts.Id;
-                tm.HobbyId = hobbyIdList[i];
+                tm.HobbyId = id;
                 db.TblMappings.Add(tm);
                 db.SaveChanges();
-                value = tm.MapId;
             }
            
-            return View("Index");
+            return RedirectToAction("Index");
         }
     }
 }
